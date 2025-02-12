@@ -62,6 +62,10 @@ dependencies {
     implementation(libs.androidx.material3)
     val roomVersion = project.findProperty("roomVersion") as String
 
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.maps.android:maps-compose:2.8.0")
+
+
     implementation("androidx.room:room-runtime:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")

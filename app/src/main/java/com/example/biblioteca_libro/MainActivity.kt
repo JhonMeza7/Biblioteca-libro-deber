@@ -53,6 +53,11 @@ class MainActivity : ComponentActivity() {
                 composable("crearBiblioteca") {
                     CrearBibliotecaScreen(bibliotecaDao, navController)
                 }
+                composable("mapa/{bibliotecaId}") { backStackEntry ->
+                    val bibliotecaId = backStackEntry.arguments?.getString("bibliotecaId")?.toInt() ?: 0
+                    MapaScreen(bibliotecaId, bibliotecaDao, navController)
+                }
+
 
                 // 📌 Editar una biblioteca existente
                 composable("editarBiblioteca/{bibliotecaId}") { backStackEntry ->
@@ -136,6 +141,12 @@ fun BibliotecaList(navController: NavHostController, bibliotecaDao: BibliotecaDa
                             }) {
                                 Text("Eliminar")
                             }
+                            Button(onClick = {
+                                navController.navigate("mapa/${biblioteca.id}")
+                            }) {
+                                Text("Ver Mapa")
+                            }
+
                         }
                     }
                 }
@@ -211,6 +222,8 @@ fun CrearBibliotecaScreen(bibliotecaDao: BibliotecaDao, navController: NavHostCo
     var direccion by remember { mutableStateOf("") }
     var fechaInauguracion by remember { mutableStateOf("") }
     var abiertaAlPublico by remember { mutableStateOf(false) }
+    var latitud by remember { mutableStateOf("") }
+    var longitud by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = { SmallTopAppBar(title = { Text("Nueva Biblioteca") }) }
@@ -225,6 +238,8 @@ fun CrearBibliotecaScreen(bibliotecaDao: BibliotecaDao, navController: NavHostCo
             TextField(value = nombre, onValueChange = { nombre = it }, label = { Text("Nombre") })
             TextField(value = direccion, onValueChange = { direccion = it }, label = { Text("Dirección") })
             TextField(value = fechaInauguracion, onValueChange = { fechaInauguracion = it }, label = { Text("Fecha de Inauguración (YYYY-MM-DD)") })
+            TextField(value = latitud, onValueChange = { latitud = it }, label = { Text("Latitud") })
+            TextField(value = longitud, onValueChange = { longitud = it }, label = { Text("Longitud") })
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = abiertaAlPublico, onCheckedChange = { abiertaAlPublico = it })
                 Text("Abierta al Público")
@@ -243,7 +258,9 @@ fun CrearBibliotecaScreen(bibliotecaDao: BibliotecaDao, navController: NavHostCo
                                 nombre = nombre,
                                 direccion = direccion,
                                 fechaInauguracion = fechaInauguracion,
-                                abiertaAlPublico = abiertaAlPublico
+                                abiertaAlPublico = abiertaAlPublico,
+                                latitud = latitud.toDoubleOrNull(),
+                                longitud = longitud.toDoubleOrNull()
                             )
                         )
                     }
@@ -255,6 +272,7 @@ fun CrearBibliotecaScreen(bibliotecaDao: BibliotecaDao, navController: NavHostCo
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

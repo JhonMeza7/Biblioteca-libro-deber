@@ -9,5 +9,7 @@ data class BibliotecaEntity(
     val nombre: String,
     val direccion: String,
     val fechaInauguracion: String,
-    val abiertaAlPublico: Boolean
+    val abiertaAlPublico: Boolean,
+    val latitud: Double?, // 📍 Nueva columna para latitud
+    val longitud: Double?
 )
